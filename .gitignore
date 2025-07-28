@@ -1,1 +1,80 @@
+# Face Recognition Setup Documentation
 Face_Recog_Setup.md
+
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build outputs
+/client/build/
+/client/dist/
+/server/dist/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Face images (sensitive data)
+/server/Faces/*.jpg
+/server/Faces/*.jpeg
+/server/Faces/*.png
+/server/Faces/*.gif
+!/server/Faces/.gitkeep
+
+# Temporary files
+temp/
+*.tmp
+*.temp
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+
+# Database files
+*.db
+*.sqlite
+
+# Blockchain private keys (NEVER commit these)
+*.pem
+*.key
+private_keys/
+
+# Smart contract artifacts
+/smart_contract/build/contracts/*.json
+!/smart_contract/build/contracts/Transaction.json
+
+# Python virtual environment
+venv/
+env/
+.venv/
+
+# Windows specific
+*.exe
+*.msi
+dlib-*.whl
