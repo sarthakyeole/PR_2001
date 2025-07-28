@@ -77,4 +77,8 @@ env/
 # Windows specific
 *.exe
 *.msi
-dlib-*.whl
+dlib-*.whl     
+
+# windows specific
+Face_Recog_Setup.md
+Face_Recog_Setup.md

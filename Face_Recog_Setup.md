@@ -141,10 +141,3 @@ Your current registered face images:
 2. Integrate with your voting frontend
 3. Add error handling for failed recognitions
 4. Consider adding a fallback authentication method
-
-## 💡 Tips for Better Recognition
-
-1. Use consistent lighting when taking photos and during recognition
-2. Ensure users look directly at the camera
-3. Avoid glasses or face coverings if possible
-4. Take multiple photos per user if recognition is unreliable
