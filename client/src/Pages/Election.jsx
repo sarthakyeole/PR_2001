@@ -1,6 +1,7 @@
 import { Grid, Toolbar, Typography } from "@mui/material";
 import React from "react";
 import CardLayout from "../Components/User/CardLayout";
+import FaceRecognitionStatus from "../Components/User/FaceRecognitionStatus";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { serverLink } from "../Data/Variables";
@@ -33,6 +34,12 @@ const Election = () => {
               Elections
             </Typography>
           </Grid>
+          
+          {/* Face Recognition Status Alert */}
+          <Grid item xs={12}>
+            <FaceRecognitionStatus />
+          </Grid>
+          
           {data.map((item, index) => {
             return (
               <Grid item xs={6} md={4} key={index}>

@@ -2,6 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { Grid, Toolbar, Typography } from "@mui/material";
 import CandidateLayout from "../Components/User/CandidateLayout";
+import FaceRecognitionStatus from "../Components/User/FaceRecognitionStatus";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { serverLink } from "../Data/Variables";
@@ -38,6 +39,12 @@ const ViewElection = () => {
                 Candidates of {data.name}
               </Typography>
             </Grid>
+            
+            {/* Face Recognition Status Alert */}
+            <Grid item xs={12}>
+              <FaceRecognitionStatus />
+            </Grid>
+            
             {data.candidates != null &&
               data.candidates.map((item, index) => {
                 return (

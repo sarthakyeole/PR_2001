@@ -22,43 +22,55 @@ const CandidateLayout = (props) => {
   const handleClick = async (id) => {
     setLoading(true);
     if (isFaceRecognitionEnable) {
-      setMsg(" Accessing Camera");
+      setMsg("🔍 Initializing Face Recognition...");
       try {
-        var res = await axios.post(serverLink + "op");
+        // Use the new face recognition endpoint
+        var res = await axios.post(serverLink + "face-recognition");
+        
+        // Check if face recognition was successful
+        if (!res.data.success) {
+          alert("Face recognition failed: " + (res.data.error || "Unknown error"));
+          setLoading(false);
+          return;
+        }
+        
+        let userName = res.data.username;
+        setMsg("✅ " + userName + " Detected");
+        
+        // Get user details by username
+        res = await axios.get(serverLink + "user/username/" + userName);
+        let user = res.data[0];
+        if (!user) {
+          alert("User with " + userName + " username Not Found");
+          setLoading(false);
+          return;
+        }
+        
+        const tmp = {
+          candidate_id: data._id,
+          candidate_username: props.username,
+          election_id: props.id,
+          user_id: user._id,
+          user_username: user.username,
+        };
+        
+        setMsg("");
+        setLoading(false);
+        navigate(link, { state: { info: tmp } });
+        
       } catch (err) {
-        alert(err.response.data);
+        console.error("Face recognition error:", err);
+        alert("Face recognition failed: " + (err.response?.data?.error || err.message || "Unknown error"));
         setLoading(false);
         return;
       }
-      let userName = res.data;
-
-      setMsg(userName + " Detected");
-
-      res = await axios.get(serverLink + "user/username/" + userName);
-      let user = res.data[0];
-      if (!user) {
-        alert("User with " + userName + "username Not Found");
-        setLoading(false);
-        return;
-      }
-      const tmp = {
-        candidate_id: data._id,
-        candidate_username: props.username,
-        election_id: props.id,
-        user_id: user._id,
-        user_username: user.username,
-      };
-
-      setMsg("");
-      setLoading(false);
-
-      navigate(link, { state: { info: tmp } });
     } else {
       const sendingData = {
         candidate_id: data._id,
         candidate_username: props.username,
         election_id: props.id,
       };
+      setLoading(false);
       navigate(link, { state: { info: sendingData } });
     }
   };
@@ -76,13 +88,23 @@ const CandidateLayout = (props) => {
   return (
     <>
       <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{ 
+          color: "#fff", 
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          flexDirection: 'column',
+          gap: 2
+        }}
         open={loading}
       >
-        <div>
-          <CircularProgress color="inherit" />
-        </div>
-        <div>{msg}</div>
+        <CircularProgress color="inherit" size={60} />
+        <Typography variant="h6" sx={{ textAlign: 'center' }}>
+          {msg || "Processing..."}
+        </Typography>
+        {msg.includes("Initializing") && (
+          <Typography variant="body2" sx={{ textAlign: 'center', opacity: 0.8 }}>
+            Please position your face clearly in front of the camera
+          </Typography>
+        )}
       </Backdrop>
 
       <Card sx={{ maxWidth: 345 }}>
@@ -124,8 +146,21 @@ const CandidateLayout = (props) => {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small" onClick={() => handleClick(data._id)}>
-            Vote
+          <Button 
+            size="small" 
+            onClick={() => handleClick(data._id)}
+            variant="contained"
+            color="primary"
+            disabled={loading}
+            sx={{ 
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1
+            }}
+          >
+            {isFaceRecognitionEnable && !loading && "📷"}
+            {loading ? "Processing..." : (isFaceRecognitionEnable ? "Vote with Face ID" : "Vote")}
           </Button>
         </CardActions>
       </Card>

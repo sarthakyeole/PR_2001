@@ -5,7 +5,7 @@ const Footer = () => (
   <>
     <AppBar position="static" component="footer" color="default">
       <Toolbar style={{ justifyContent: "center" }}>
-        <Typography variant="caption">©2024</Typography>
+        <Typography variant="caption">©2025</Typography>
       </Toolbar>
     </AppBar>
   </>

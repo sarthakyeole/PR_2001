@@ -1,4 +1,5 @@
 import { PythonShell } from "python-shell";
+import { exec } from 'child_process';
 import multer from "multer";
 import fs from "fs";
 import path from "path";
@@ -309,20 +310,56 @@ const sendMail = async (mailContent, mailSubject, user) => {
 
 export const a = {
   sc: async (req, res) => {
-    const filePath = path.resolve(process.cwd(), "Controller", "fr.py");
-    PythonShell.run(filePath, null, function (err, result) {
-      // console.log(result);
-      // console.log("Error : ");
-      // console.log(err);
-      // console.log("Python script finished");
-      if (err) {
-        return res.status(500).send("Error While Running Python");
+    // Use batch file approach which ensures correct Python environment
+    const batchPath = path.resolve(process.cwd(), "Controller", "run_face_auth.bat");
+    const command = `"${batchPath}" 10 80`; // Updated to match FaceAuthFallback parameters
+    
+    exec(command, { timeout: 30000 }, (error, stdout, stderr) => {
+      if (error) {
+        console.error("Face recognition error:", error);
+        return res.status(500).json({
+          success: false,
+          error: "Face recognition system error",
+          message: "Error while running face recognition"
+        });
       }
 
-      if (result) {
-        return res.status(201).send(result);
-      } else {
-        return res.status(500).send("No face Match Found");
+      if (stderr) {
+        console.error("Python stderr:", stderr);
+        return res.status(500).json({
+          success: false,
+          error: "Face recognition system error",
+          message: "Face recognition system error"
+        });
+      }
+
+      try {
+        // Extract JSON from the last line of stdout
+        const lines = stdout.trim().split('\n');
+        const jsonLine = lines[lines.length - 1];
+        const authResult = JSON.parse(jsonLine);
+        
+        if (authResult.success) {
+          return res.status(201).json({
+            success: true,
+            username: authResult.username,
+            message: "Face recognition successful"
+          });
+        } else {
+          return res.status(401).json({
+            success: false,
+            error: authResult.error,
+            message: "Face recognition failed"
+          });
+        }
+      } catch (parseError) {
+        console.error("JSON parse error:", parseError);
+        console.error("stdout was:", stdout);
+        return res.status(500).json({
+          success: false,
+          error: "Error parsing face recognition result",
+          message: "Error parsing face recognition result"
+        });
       }
     });
   },

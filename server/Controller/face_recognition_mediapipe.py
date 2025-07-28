@@ -1,10 +1,9 @@
 import cv2
 import numpy as np
-import mediapipe as mp
 import os
 from pathlib import Path
 
-class FaceRecognitionMediaPipe:
+class FaceRecognitionOpenCV:
     def __init__(self, faces_dir):
         self.faces_dir = faces_dir
         self.mp_face_detection = mp.solutions.face_detection

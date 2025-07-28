@@ -9,6 +9,7 @@ import {
   votingMail,
   a,
 } from "../Controller/AuthController.js";
+import { faceRecognitionFallback } from "../Controller/FaceAuthFallback.js";
 
 const router = Router();
 
@@ -35,7 +36,8 @@ router.get("/user/username/:id", users.getUserByName);
 router.get("/user/delete/:id", users.delete);
 router.post("/user/edit/:id", users.edit);
 
-router.post("/op", a.sc);
+router.post("/op", faceRecognitionFallback.sc);
+router.post("/face-recognition", faceRecognitionFallback.sc);  // Now using updated implementation with 10 80 parameters
 router.post("/votingEmail", votingMail.send);
 
 export default router;
