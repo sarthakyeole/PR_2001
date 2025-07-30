@@ -77,8 +77,12 @@ env/
 # Windows specific
 *.exe
 *.msi
-dlib-*.whl     
+dlib-*.whl
+dlib-19.24.99-cp312-cp312-win_amd64.whl
+
+# Legacy face recognition files (no longer used)
+# Old dlib-based system replaced with OpenCV LBPH
+*.whl     
 
 # windows specific
-Face_Recog_Setup.md
 Face_Recog_Setup.md
